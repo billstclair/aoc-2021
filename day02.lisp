@@ -1,6 +1,6 @@
 (in-package :cl-user)
 
-;; https://adventofcode.com/2021/day/1
+;; https://adventofcode.com/2021/day/2
 
 (defun aoc-day2-part1 (string)
   (check-type string string)

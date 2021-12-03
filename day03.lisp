@@ -44,11 +44,14 @@ Returns the length of `numbers` as a second value."
                    (incf epsilon (expt 2 bit)))
             finally (return (values gamma epsilon))))))
 
-(defun aoc-day3 (&optional (numbers *aoc-day3-numbers*))
+(defun aoc-day3-part1 (&optional (numbers *aoc-day3-numbers*))
   (multiple-value-bind (gamma epsilon) (gamma-and-epsilon numbers)
     (format *error-output* "gamma: ~s, epsilon: ~s~%" gamma epsilon)
     (* gamma epsilon)))
-   
+
+(defun aoc-day3-part2 (&optional (numbers *aoc-day3-numbers*))
+  (declare (ignore numbers))
+  "Not Yet Implemented")
 
 (defvar *aoc-day3-input*
   "000110000001
@@ -1058,6 +1061,7 @@ Returns the length of `numbers` as a second value."
               while string
               collect (parse-integer string :radix 2))))
 
-(format t "Day 03: ~s~%"
-        (aoc-day3 *aoc-day3-numbers*)
+(format t "Day 03 Part 1: ~s~%Day 03 Part 2: ~s~%"
+        (aoc-day3-part1 *aoc-day3-numbers*)
+        (aoc-day3-part2 *aoc-day3-numbers*)
         )
