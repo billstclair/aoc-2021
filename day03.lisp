@@ -47,13 +47,43 @@ Returns the length of `numbers` as a second value."
 (defun aoc-day3-part1 (&optional (numbers *aoc-day3-numbers*) (output nil))
   (multiple-value-bind (gamma epsilon) (gamma-and-epsilon numbers)
     (when output
-      (let ((*error-output* output))
-        (format *error-output* "gamma: ~s, epsilon: ~s~%" gamma epsilon)))
+      (format output "gamma: ~s, epsilon: ~s~%" gamma epsilon))
     (* gamma epsilon)))
 
-(defun aoc-day3-part2 (&optional (numbers *aoc-day3-numbers*))
-  (declare (ignore numbers))
-  "Not Yet Implemented")
+(defun oxygen-generator-rating (&optional (numbers *aoc-day3-numbers*))
+  (let ((bits (max-bits numbers)))
+    (loop for bit from (1- bits) downto 0
+          for bit-counts = (bit-counts numbers)
+          for bit-count = (or (nth bit bit-counts) 0)
+          for numbers-count = (length numbers)
+          for bitp = (>= (* 2 bit-count) numbers-count) do
+            (setf numbers (remove-if-not
+                           (lambda (x) (eq bitp (logbitp bit x)))
+                           numbers))
+            (when (null (cdr numbers))
+              (return (car numbers))))))
+
+(defun co2-scrubber-generator-rating (&optional (numbers *aoc-day3-numbers*))
+  (let ((bits (max-bits numbers)))
+    (loop for bit from (1- bits) downto 0
+          for bit-counts = (bit-counts numbers)
+          for bit-count = (or (nth bit bit-counts) 0)
+          for numbers-count = (length numbers)
+          for bitp = (< (* 2 bit-count) numbers-count) do
+            (setf numbers
+                  (remove-if-not
+                   (lambda (x) (eq bitp (logbitp bit x)))
+                   numbers))
+           (when (null (cdr numbers))
+             (return (car numbers))))))
+
+(defun aoc-day3-part2 (&optional (numbers *aoc-day3-numbers*) (output nil))
+  (let ((oxygen-generator-rating (oxygen-generator-rating numbers))
+        (co2-scrubber-generator-rating (co2-scrubber-generator-rating numbers)))
+    (when output
+      (format output "oxygen-generator-rating: ~s, co2-scrubber-generator-rating: ~s~%"
+              oxygen-generator-rating co2-scrubber-generator-rating))
+    (* oxygen-generator-rating co2-scrubber-generator-rating)))
 
 (defvar *aoc-day3-input*
   "000110000001
@@ -1057,13 +1087,16 @@ Returns the length of `numbers` as a second value."
 101110011111
 101000010101")
 
-(setf *aoc-day3-numbers*
-      (with-input-from-string (s *aoc-day3-input*)
-        (loop for string = (read-line s nil nil)
-              while string
-              collect (parse-integer string :radix 2))))
+(defun numbers-from-string (string)
+  (with-input-from-string (s string)
+    (loop for string = (read-line s nil nil)
+          while string
+          collect (parse-integer string :radix 2))))
 
-(format t "Day 03 Part 1: ~s~%Day 03 Part 2: ~s~%"
-        (aoc-day3-part1 *aoc-day3-numbers*)
-        (aoc-day3-part2 *aoc-day3-numbers*)
-        )
+(setf *aoc-day3-numbers* (numbers-from-string *aoc-day3-input*))
+
+(defun run-aoc-day3 ()
+  (format t "Day 03 Part 1: ~s~%Day 03 Part 2: ~s~%"
+          (aoc-day3-part1 *aoc-day3-numbers*)
+          (aoc-day3-part2 *aoc-day3-numbers*)
+          ))
