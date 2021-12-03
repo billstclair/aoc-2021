@@ -1100,3 +1100,5 @@ Returns the length of `numbers` as a second value."
           (aoc-day3-part1 *aoc-day3-numbers*)
           (aoc-day3-part2 *aoc-day3-numbers*)
           ))
+
+(run-aoc-day3)
