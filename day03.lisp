@@ -44,9 +44,11 @@ Returns the length of `numbers` as a second value."
                    (incf epsilon (expt 2 bit)))
             finally (return (values gamma epsilon))))))
 
-(defun aoc-day3-part1 (&optional (numbers *aoc-day3-numbers*))
+(defun aoc-day3-part1 (&optional (numbers *aoc-day3-numbers*) (output nil))
   (multiple-value-bind (gamma epsilon) (gamma-and-epsilon numbers)
-    (format *error-output* "gamma: ~s, epsilon: ~s~%" gamma epsilon)
+    (when output
+      (let ((*error-output* output))
+        (format *error-output* "gamma: ~s, epsilon: ~s~%" gamma epsilon)))
     (* gamma epsilon)))
 
 (defun aoc-day3-part2 (&optional (numbers *aoc-day3-numbers*))
